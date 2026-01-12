@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Database to Blockchain Network Conversion Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #82d18f;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background-color: #085337;
+            color: white;
+            padding: 40px 30px;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        .header-top img {
+            height: 80px;
+            width: auto;
+        }
+
+        .header-text {
+            text-align: left;
+        }
+
+        .header-text p {
+            font-size: 0.95rem;
+            margin: 3px 0;
+            opacity: 0.95;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            margin-top: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            color: #16a16c;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #16a16c;
+            display: inline-block;
+        }
+
+        h3 {
+            color: #16a16c;
+            font-size: 1.3rem;
+            margin: 20px 0 15px 0;
+        }
+
+        p, li {
+            margin-bottom: 12px;
+            text-align: justify;
+            font-size: 1rem;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        ul li {
+            padding-left: 30px;
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        ul li:before {
+            content: "▸";
+            position: absolute;
+            left: 10px;
+            color: #16a16c;
+            font-weight: bold;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 5px solid #16a16c;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .abstract-box {
+            background: linear-gradient(135deg, #e0e7ff 0%, #f3e7ff 100%);
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #82d18f;
+            margin-bottom: 30px;
+        }
+
+        .diagram-placeholder {
+            background: #e9ecef;
+            padding: 40px 20px;
+            text-align: center;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 2px dashed #16a16c;
+        }
+
+        .diagram-placeholder img {
+            max-width: 100%;
+            height: auto;
+            margin: 20px auto;
+            display: block;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .diagram-placeholder h1 {
+            color: #137a42;
+            font-size: 2rem;
+            margin: 30px 0;
+            padding: 0;
+        }
+
+        .demo-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .demo-link {
+            display: inline-block;
+            background: #16a16c;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 10px 0;
+            transition: background 0.3s ease;
+        }
+
+        .demo-link:hover {
+            background: #085337;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        table thead {
+            background: #16a16c;
+            color: white;
+        }
+
+        table th, table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        table th {
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        table td {
+            font-size: 0.95rem;
+        }
+
+        table a {
+            color: #16a16c;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        table a:hover {
+            text-decoration: underline;
+        }
+
+        .team-intro {
+            background: linear-gradient(135deg, #e0f7fa 0%, #e1f5fe 100%);
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 5px solid #16a16c;
+            margin-bottom: 30px;
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+
+        footer {
+            background: #085337;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            header {
+                padding: 30px 20px;
+            }
+
+            .header-top {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .header-text {
+                text-align: center;
+            }
+
+            .header-top img {
+                height: 60px;
+            }
+
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            .content {
+                padding: 30px 20px;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            h3 {
+                font-size: 1.2rem;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            ul li {
+                padding-left: 25px;
+            }
+
+            .diagram-placeholder {
+                padding: 30px 15px;
+            }
+
+            .diagram-placeholder h1 {
+                font-size: 1.5rem;
+            }
+
+            table {
+                font-size: 0.85rem;
+            }
+
+            table th, table td {
+                padding: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.3rem;
+            }
+
+            .header-text p {
+                font-size: 0.85rem;
+            }
+
+            h2 {
+                font-size: 1.3rem;
+            }
+
+            .content {
+                padding: 20px 15px;
+            }
+
+            .abstract-box, .demo-section, .team-intro {
+                padding: 20px;
+            }
+
+            .diagram-placeholder {
+                padding: 20px 10px;
+            }
+
+            .diagram-placeholder h1 {
+                font-size: 1.2rem;
+            }
+
+            table {
+                font-size: 0.8rem;
+            }
+
+            table th, table td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-top">
+                <div class="header-text">
+                    <p>University of Bahrain</p>
+                    <p>College of Information Technology</p>
+                    <p>Department of Information System</p>
+                </div>
+                <img src="images/logo.png" style="height: 3cm;">
+            </div>
+            <h1>DATABASE TO BLOCKCHAIN NETWORK CONVERSION TOOL</h1>
+        </header>
+
+        <div class="content">
+            <section id="abstract">
+                <h2>Abstract</h2>
+                <div class="abstract-box">
+                    <p>This project introduces the design and deployment of a Database to Blockchain Network Conversion Tool. The tool converts traditional SQL databases into safe assets stored inside the network with the help of Hyperledger Fabric.</p>
+                    
+                    <p>The project overcomes the disadvantages of traditional databases such as single points of failure, poor auditability, and data tampering risks. The system enables uploading a ".sql" database file, which will automatically be recorded as a transaction that will be stored within the ledger blocks.</p>
+                    
+                    <p>The system supports secure role-based queries via a friendly user interface. The smart contracts used in the tool provide high levels of data integrity, confidentiality, as well as auditability. Although the existing implementation is based on SQL databases and on one blockchain channel usage, the blockchain network offers basic infrastructure for larger upgrades, such as multi-organization networks and advanced query modeling, and performance optimization.</p>
+                </div>
+            </section>
+
+            <section id="objectives">
+                <h2>Objectives</h2>
+                <div class="grid">
+                    <div class="card">
+                        <h3>Project Scope</h3>
+                        <ul>
+                            <li>Discuss how the tool is implemented with smart contracts</li>
+                            <li>Focus on permissioned blockchain (no cryptocurrency implementation)</li>
+                            <li>Only permissioned blockchains are discussed; other blockchain types are out of scope</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>Development Goals</h3>
+                        <ul>
+                            <li>Develop a user-friendly UI tool for database uploads</li>
+                            <li>Accept SQL databases and insert each table into the permissioned blockchain network seamlessly</li>
+                            <li>Ensure smooth operation with no issues during conversion</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>Targeting</h3>
+                        <ul>
+                            <li>Worldwide working organizations that collaborate together</li>
+                            <li>Work data is not owned by anyone but accessible to everyone authorized on the blockchain channel</li>
+                            <li>Data transparency and shared access</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="methods">
+                <h2>Methodology</h2>
+                <div class="diagram-placeholder">
+                    <img src="images/image-1.png" width="80%" style="max-width: 100%;height: auto;">
+                    <h1>System Flow</h1>
+                    <img src="images/image-2.png" width="80%" style="max-width: 100%">
+                    <h1>Blockchain Network</h1>
+                </div>
+            </section>
+
+
+            <section id="results">
+                <h2>Used Technologies</h2>
+                <h3>Front-end</h3>
+                <ul>
+                    <li>HTML/CSS/JS Front-end</li>
+                </ul>
+
+                <h3>Backend</h3>
+                <ul>
+                    <li>Backend NodeJS server</li>
+                    <li>Hyperledger Fabric Framework used inside Fabric SDK layer</li>
+                </ul>
+
+                <h3>Blockchain Network</h3>
+                <ul>
+                    <li>Chaincode (smart contract) written in GO</li>
+                    <li>Blockchain network componentes like orderes,peers,CouchDBs run as Docker containers </li>
+                </ul>
+
+            </section>
+
+
+            <section id="results">
+                <h2>Results</h2>
+                <p>The tool successfully mitigated major shortcomings in traditional database systems, especially data tampering and single points of failure, by offering a safe and transparent alternative through <strong>immutability</strong>, <strong>decentralization</strong>, and <strong>controlled access</strong>.</p>
+        
+                <h3>Key Features Delivered</h3>
+                <ul>
+                    <li>Transform database tables into protected assets inside the blockchain network</li>
+                    <li>Add new transaction blocks to the ledger</li>
+                    <li>Perform secure role-based access control</li>
+                </ul>
+            </section>
+
+            <section id="demo">
+                <h2>Videos</h2>
+                    <h3>- Elevator Pitch</h3>
+
+                    <div style="text-align: center; margin-top: 25px;">
+                        <a href="https://youtu.be/wF2ekl4f8Tc" class="demo-link">Click for Video</a>
+                    </div>
+
+
+                    <h3>- Full System Implementation</h3>
+                    <div style="text-align: center; margin-top: 25px;">
+                        <a href="https://youtu.be/NDNwQBQ_8zg" class="demo-link">Click for Video</a>
+                    </div>
+
+            </section>
+
+            <section id="conclusion">
+                <h2>Conclusion & Future Work</h2>
+                
+                <h3>Key Achievements</h3>
+                <p>This project successfully demonstrates how blockchain technology can enhance database security, transparency, integrity, and auditability. By converting traditional SQL databases into immutable assets in the blockchain network, the tool provides organizations with a robust foundation for secure, decentralized data management. The implementation proves the viability of Hyperledger Fabric for enterprise-grade data storage solutions.</p>
+
+                <h3>Future Enhancements</h3>
+                <div class="grid">
+                    <div class="card">
+                        <h3>Database Support</h3>
+                        <p>Expand support beyond .sql files to include NoSQL databases, CSV formats, and real-time database synchronization capabilities.</p>
+                    </div>
+                    <div class="card">
+                        <h3>User Interface</h3>
+                        <p>Enhance the UI with advanced visualization tools including block explorers, transaction history timelines, and interactive data query dashboards.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Access Control</h3>
+                        <p>Upgrade from RBAC (Role-Based Access Control) to ABAC (Attribute-Based Access Control) for more granular and dynamic permission management.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Performance Optimization</h3>
+                        <p>Implement parallel processing, data sharding, and caching mechanisms to handle large-scale datasets more efficiently.</p>
+                    </div>
+                </div>
+            </section>
+
+                    <section id="team">
+                <h2>About the Project & Team</h2>
+                
+                <div class="team-intro">
+                    <p>This project is a <strong>Final Year Senior Project</strong> completed during Semester 1 of the Academic Year 2025/2026 at the College of Information Technology — University of Bahrain.</p>
+                </div>
+
+                <h3>Student Information</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Major</th>
+                            <th>Email</th>
+                            <th>LinkedIn</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Mohammed Jaffer</td>
+                            <td>Cybersecurity</td>
+                            <td><a href="https://mail.google.com/mail/?view=cm&fs=1&to=mjm.almoathen@gmail.com">mjm.almoathen@gmail.com</a></td>
+                            <td><a href="https://www.linkedin.com/in/mohammed-almoathen-79879a356/" target="_blank">LinkedIn</a></td>
+                        </tr>
+                        <tr>
+                            <td>Hussain Ali AlAfoo</td>
+                            <td>Cybersecurity</td>
+                            <td><a href="https://mail.google.com/mail/?view=cm&fs=1&to=hus05ain2003@gmail.com">hus05ain2003@gmail.com</a></td>
+                            <td><a href="https://www.linkedin.com/in/hussain-al-afoo-513370357/" target="_blank">LinkedIn</a></td>
+                        </tr>
+                        <tr>
+                            <td>Ibrahim Salah</td>
+                            <td>Cybersecurity</td>
+                            <td><a href="https://mail.google.com/mail/?view=cm&fs=1&to=ebrahsala@gmail.com">ebrahsala@gmail.com</a></td>
+                            <td><a href="https://www.linkedin.com/in/ibrahim-salah-895070180/" target="_blank">LinkedIn</a></td>
+                        </tr>                    </tbody>
+                </table>
+
+                <h3>Supervisor</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Rank</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Dr. Ali Alsaffar</td>
+                            <td>Assistant Professor</td>
+                            <td><a href="https://mail.google.com/mail/?view=cm&fs=1&to=aalsaffar@uob.edu.bh">aalsaffar@uob.edu.bh</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+
+        <footer>
+            <p>&copy; 2025 University of Bahrain - College of Information Technology</p>
+        </footer>
+    </div>
+</body>
+</html>
